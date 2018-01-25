@@ -1,14 +1,9 @@
-/*! 借鉴自 Vue util 模块 */
+// 常用工具
 
 /**
  * Perform no operation.
  */
 export function noop() {}
-
-/**
- * Always return false.
- */
-export const no = () => false
 
 // these helpers produces better vm code in JS engines due to their
 // explicitness and function inlining
@@ -20,19 +15,13 @@ export function isDef(v) {
   return v !== undefined && v !== null
 }
 
-export function isTrue(v) {
-  return v === true
+export function isFunction(obj) {
+  return typeof obj === 'function'
 }
 
-export function isFalse(v) {
-  return v === false
-}
-
-/**
- * Check if value is primitive
- */
-export function isPrimitive(v) {
-  return typeof value === 'string' || typeof value === 'number'
+export function isNumber(obj) {
+  let type = typeof obj
+  return (type === 'number' || type === 'string') && !isNaN(obj - parseFloat(obj))
 }
 
 /**
@@ -87,31 +76,6 @@ export function remove(arr, item) {
 }
 
 /**
- * Check whether the object has the property.
- */
-// const hasOwnProperty = Object.prototype.hasOwnProperty
-// export function hasOwn(obj: Object | Array < * > , key: string) {
-//   return hasOwnProperty.call(obj, key)
-// }
-
-/**
- * Simple bind, faster than native
- */
-// export function bind(fn, ctx: Object) {
-//   function boundFn(a) {
-//     const l = arguments.length
-//     return l ?
-//       l > 1 ?
-//       fn.apply(ctx, arguments) :
-//       fn.call(ctx, a) :
-//       fn.call(ctx)
-//   }
-//   // record original fn length
-//   boundFn._length = fn.length
-//   return boundFn
-// }
-
-/**
  * Convert an Array-like object to a real Array.
  */
 export function toArray(list, start) {
@@ -124,10 +88,23 @@ export function toArray(list, start) {
   return ret
 }
 
+// 深拷贝
+export function deepClone(to = {}, obj = {}) {
+  for (var k in obj) {
+    if (typeof obj[k] === 'object') {
+      to[k] = (obj[k].constructor === Array) ? [] : {}
+      deepCopy(obj[k], to[k])
+    } else {
+      to[k] = obj[k]
+    }
+  }
+  return to
+}
+
 /**
  * Mix properties into target object.
  */
-export function extend(to, _from) {
+export function clone(to, _from) {
   for (const key in _from) {
     to[key] = _from[key]
   }
@@ -139,40 +116,12 @@ export function extend(to, _from) {
  */
 export function toObject(arr) {
   const res = {}
-  for (let i = 0; i < arr.length; i++) {
+  for (let i = 0 i < arr.length i++) {
     if (arr[i]) {
-      extend(res, arr[i])
+      clone(res, arr[i])
     }
   }
   return res
-}
-
-/**
- * Check if two values are loosely equal - that is,
- * if they are plain objects, do they have the same shape?
- */
-export function looseEqual(a, b) {
-  const isObjectA = isObject(a)
-  const isObjectB = isObject(b)
-  if (isObjectA && isObjectB) {
-    try {
-      return JSON.stringify(a) === JSON.stringify(b)
-    } catch (e) {
-      // possible circular reference
-      return a === b
-    }
-  } else if (!isObjectA && !isObjectB) {
-    return String(a) === String(b)
-  } else {
-    return false
-  }
-}
-
-export function looseIndexOf(arr, val) {
-  for (let i = 0; i < arr.length; i++) {
-    if (looseEqual(arr[i], val)) return i
-  }
-  return -1
 }
 
 /**

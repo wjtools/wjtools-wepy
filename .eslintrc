@@ -1,9 +1,10 @@
 {
   "root": true,
   "extends": [
-    "eslint:recommended"
+    "standard"
   ],
   "rules": {
-    "generator-star-spacing": "off"
+    "generator-star-spacing": "off",
+    "space-before-function-paren": "off"
   }
 }
